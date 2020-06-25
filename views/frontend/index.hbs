@@ -49,7 +49,7 @@
                         <select name="state" id="states" class="form-control">
                         <option value="">Select state</option>
                             {{#each state}}
-                            <option value="{{this.id}}>">{{this.name}} </option>
+                            <option value="{{this.id}}">{{this.name}} </option>
                             {{/each}}
                         </select> 
                     </div>
@@ -57,6 +57,7 @@
                         <label for="city">City</label>
                         <select name="cities" id="cities" class="form-control">
                             <option value="">Select city</option>
+
                         </select>
                     </div>
                 </div>  
@@ -105,24 +106,21 @@
     $("#states").change(function(){
         var state_id = $("#states").val();
         $(".error_s").remove();
-        if(state_id){
-        $.ajax({
-            url: 'index.php',
-            type: 'post',
-            data: {
-                state_id: state_id,
-           },
-           success: function(response){
-                if(response.success == true){
-                    alert(true);
-                    $("#cities").html('');
-                    for(let i = 0; i < response.city.length; i++){
-                        $("#cities").append('<option value="'+ response.city[i].id + '">'+ response.city[i].name + '</option');
-                    }
-                }
-                //$('#cities').html(response);
-           }
-        })
+            if(state_id){
+                $.ajax({
+                    type: 'post',
+                    url: '/get-cities',
+                    data: {state_id: state_id},
+                    success: function(response){
+                        if(response.success == true){
+                            $("#cities").html('');
+                            for(var i=0; i<response.city.length; i++){
+                                $("#cities").append('<option value="'+ response.city[i].id + '">'+ response.city[i].name + '</option>');
+                            }
+                        }
+                    },
+                    error: function(xhr){}
+            });
         }
         else{
             $('#cities').html('<option value="">Select city </option>'); 
@@ -331,7 +329,7 @@
         formdata.append('cities', cities);
         $.ajax({
             type: 'post',
-            url: 'index.php',
+            url: '/user-registration',
             data: formdata,
             processData: false,
             contentType: false,
