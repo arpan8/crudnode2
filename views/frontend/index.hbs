@@ -48,9 +48,9 @@
                     <div class="form-group col">
                         <label for="state">State</label>                      
                         <select name="state" id="states" class="form-control">
-                        <option value="">Select state</option>
+                            <option value="">Select state</option>
                             {{#each state}}
-                            <option value="{{this.id}}">{{this.name}} </option>
+                                <option value="{{this.id}}">{{this.name}} </option>
                             {{/each}}
                         </select> 
                     </div>
@@ -85,6 +85,7 @@
                     <th scope="col">State</th>
                     <th scope="col">City</th>
                     <th scope="col">Picture</th>
+                    <th scope="col">Action</th>
                 </tr>
             </thead>
             <tbody id = "details">
@@ -97,6 +98,7 @@
                     <td>{{this.city.name}}</td>
                     <td><img src="{{this.picture}}" 
                      width = "50" height = "50" /></td>
+                    <td><button class="btn btn-danger" id="del_details" value="{{this.id}}">Delete</button></td> 
                 </tr>  
                 {{/each}} 
             </tbody>
@@ -105,6 +107,12 @@
 </body>
 
 <script>
+    //What is the difference between .click and .on ('click' in jQuery? (check) event delegation
+    //delete
+    $(document).on('click', '#del_details',function(){
+        var delete_details = $("#del_details").val();
+        alert(delete_details); 
+    });
     //States
     $("#states").change(function(){
         var state_id = $("#states").val();
