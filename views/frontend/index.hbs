@@ -7,6 +7,7 @@
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js" integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI" crossorigin="anonymous"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.bundle.min.js" integrity="sha384-1CmrxMRARb6aLqgBO7yyAxTOQE2AKb9GfXnEo760AUcUmFx3ibVJJAzGytlQcNXd" crossorigin="anonymous"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
     <title>crud</title>
 </head>
 <body>
@@ -76,28 +77,30 @@
             </div>
         </div>
         <table class="table table-striped table-dark">
-  <thead>
-    <tr>
-      <th scope="col">Name</th>
-      <th scope="col">Email</th>
-      <th scope="col">Mobile</th>
-      <th scope="col">State</th>
-      <th scope="col">City</th>
-      <th scope="col">Picture</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td>Mark</td>
-      <td>Otto@gmail.com</td>
-      <td>@7056908021</td>
-      <td>West Bengal</td>
-      <td>Howrah</td>
-      <td><img src="https://www.gravatar.com/avatar/HASH" 
-       width = "50" height = "50" /></td>
-    </tr>   
-  </tbody>
-</table>
+            <thead>
+                <tr>
+                    <th scope="col">Name</th>
+                    <th scope="col">Email</th>
+                    <th scope="col">Mobile</th>
+                    <th scope="col">State</th>
+                    <th scope="col">City</th>
+                    <th scope="col">Picture</th>
+                </tr>
+            </thead>
+            <tbody id = "details">
+                {{#each user}}
+                <tr>
+                    <td>{{this.first_name}} {{this.last_name}}</td>
+                    <td>{{this.email}}</td>
+                    <td>{{this.mobile_no}}</td>
+                    <td>{{this.state.name}}</td>
+                    <td>{{this.city.name}}</td>
+                    <td><img src="{{this.picture}}" 
+                     width = "50" height = "50" /></td>
+                </tr>  
+                {{/each}} 
+            </tbody>
+        </table>
     </div>
 </body>
 
@@ -319,14 +322,15 @@
         }
         var filedata = document.getElementById("picture");
         formdata = new FormData();
-        var file = filedata.file;
+        var file = filedata.files[0];
         formdata.append('picture', file);
         formdata.append('firstname', firstname);
         formdata.append('lastname', lastname);
         formdata.append('email', email);
         formdata.append('password', password);
-        formdata.append('states', states);
+        formdata.append('state', states);
         formdata.append('cities', cities);
+        formdata.append('mobile_no', mobile_no);
         $.ajax({
             type: 'post',
             url: '/user-registration',
@@ -334,12 +338,30 @@
             processData: false,
             contentType: false,
             beforeSend: function(){
+                $("#register").html('Please wait...');
                 $("#register").attr('disabled',true); 
             },
             success: function(response){
-                
+                 swal({
+                        title: "Success",
+                        text: "Registration Successful",
+                        type: "Success"
+                 });
+                //window.location.reload();
+                //for(let i = 0; i < response.user_details.length; i++){
+                    $('#details').append('<tr><td>' + response.user_details.first_name + " "+ response.user_details.last_name  + '</td><td>'
+                                                   + response.user_details.email + '</td>'+
+                                            '<td>' + response.user_details.mobile_no + 
+                                            '<td>' + response.user_details.state.name +
+                                            '<td>' + response.user_details.city.name +
+                                            '<td>' + '<img src="' + response.user_details.picture + '" width = "50" height = "50" /> </td></tr>')
+                //}
             }
         });
+        $("#register").html('Register');
+        $("#register").attr('disabled',false); 
+        $("#cities").html('');
+        $('#cities').html('<option value="">Select city </option>');
         reset();
     });
     function reset(){
