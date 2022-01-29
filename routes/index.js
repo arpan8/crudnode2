@@ -22,15 +22,11 @@ var picture = multer({
 });
 /* GET home page. */
 router.get('/', async(req, res)=> {
+
   var state = await State.findAll({
     attributes: ['id','name']
   });
-  User.belongsTo(State,{
-    foreignKey: 'states'
-  });
-  User.belongsTo(City,{
-    foreignKey: 'cities'
-  });
+  
   var user = await User.findAll({
     include:[{
         model: State,
@@ -101,12 +97,6 @@ router.post('/user-registration',picture.single('picture'), async(req, res)=>{
     cities: req.body.cities
   });
 
-  User.belongsTo(State,{
-    foreignKey: 'states'
-  });
-  User.belongsTo(City,{
-    foreignKey: 'cities'
-  });
   var user_details = await User.findOne({
     where: {
       id: user.id
@@ -127,4 +117,29 @@ router.post('/user-registration',picture.single('picture'), async(req, res)=>{
     user_details
   });
 });
+
+router.get('/view-user/:id', async(req, res)=>{
+  var id =req.params.id;
+
+  var user_details = await User.findOne({
+    where: {
+      id
+    },
+    include:[{
+      model: State,
+      attributes:['id','name']
+  },{
+      model: City,
+      attributes:['id','name']
+    }
+  ],
+  attributes: ['id','first_name','last_name','email','mobile_no','picture','password']
+  })
+
+  res.json({
+    success: true,
+    code: 200,
+    user_details
+  })
+})
 module.exports = router;
