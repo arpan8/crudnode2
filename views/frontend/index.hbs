@@ -112,7 +112,7 @@
                     <td>{{this.city.name}}</td>
                     <td><img src="{{this.picture}}" width="50" height="50" /></td>
                     <td>
-                        <button class="btn btn-warning btn-sm" id="edit_details" type="submit"
+                        <button class="btn btn-warning btn-sm" id="edit_details" 
                             value='{{this.id}}'>Edit</button>
                         <button class="btn btn-danger btn-sm" id="del_details" value="{{this.id}}">Delete</button>
                     </td>
@@ -125,7 +125,7 @@
 
 <script>
     //What is the difference between .click and .on ('click' in jQuery? (check) event delegation
-    //delete
+    
     $(document).on('click', '#edit_details', function () {
         var id = $(this).val();
         
