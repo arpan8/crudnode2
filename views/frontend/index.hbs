@@ -405,7 +405,10 @@
                     '<td>' + response.user_details.mobile_no +
                     '<td>' + response.user_details.state.name +
                     '<td>' + response.user_details.city.name +
-                    '<td>' + '<img src="' + response.user_details.picture + '" width = "50" height = "50" /> </td></tr>')
+                    '<td>' + '<img src="' + response.user_details.picture + '" width = "50" height = "50" /> </td>'+
+                    '<td>' + '<button class="btn btn-warning btn-sm" id="edit_details" value="'+response.user_details.id+
+                        '" style="margin-right: 5px">Edit</button><button class="btn btn-danger btn-sm" id="del_details" value="'+response.user_details.id+'">Delete</button></td></tr>'
+                    )
                 //}
             }
         });
